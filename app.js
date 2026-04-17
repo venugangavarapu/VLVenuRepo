@@ -1,5 +1,6 @@
 function helloWorld() {
   console.log('Hello, Veni World!');
+  console.log('Hello, Venu World!');
 }
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
