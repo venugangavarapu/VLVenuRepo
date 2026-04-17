@@ -64,7 +64,7 @@ function showSection(name) {
 // ─── BMI & CALCULATIONS ──────────────────────────────────────────────────────
 function calcBMI(weight, height) {
   const h = height / 100;
-  return (weight / (h * h)).toFixed(1);
+  return Math.round(weight / (h * h) * 10) / 10;
 }
 
 function bmiCategory(bmi) {
@@ -419,7 +419,7 @@ function deleteFood(id) {
   const log = getFoodLog().filter(e => e.id !== id);
   setData('hn_food_log', log);
   renderDayLog();
-  toast('Entry removed', 'error');
+  toast('Entry removed', 'info');
 }
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
@@ -809,8 +809,68 @@ function buildRecommendations(p, bmi, avgCal, goalCal, avgProt) {
   return recs;
 }
 
+// ─── WELCOME GATE ────────────────────────────────────────────────────────────
+
+// Simulated async storage API — swap these two functions for real API calls later
+function saveWelcomeData(payload) {
+  return new Promise((resolve) => {
+    localStorage.setItem('hn_welcome', JSON.stringify(payload));
+    resolve();
+  });
+}
+
+function loadWelcomeData() {
+  return new Promise((resolve) => {
+    const data = localStorage.getItem('hn_welcome');
+    resolve(data ? JSON.parse(data) : null);
+  });
+}
+
+async function submitWelcome() {
+  const lastName = document.getElementById('welcomeLastName').value.trim();
+  const age = parseInt(document.getElementById('welcomeAge').value);
+  const errEl = document.getElementById('welcomeError');
+  const btn = document.getElementById('welcomeSubmitBtn');
+
+  if (!lastName) { errEl.textContent = 'Please enter your last name.'; errEl.className = 'welcome-error'; return; }
+  if (!age || age < 1 || age > 120) { errEl.textContent = 'Please enter a valid age.'; errEl.className = 'welcome-error'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  try {
+    await saveWelcomeData({ lastName, age });
+    document.getElementById('welcomeModal').classList.add('hidden');
+  } catch (err) {
+    errEl.textContent = 'Something went wrong. Please try again.';
+    errEl.className = 'welcome-error';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Get Started';
+  }
+}
+
+async function checkWelcome() {
+  try {
+    const data = await loadWelcomeData();
+    if (data) document.getElementById('welcomeModal').classList.add('hidden');
+  } catch (err) {
+    // Storage unavailable — leave modal visible so user can still proceed
+  }
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await checkWelcome();
+
+  // Welcome modal submit button and Enter key support
+  document.getElementById('welcomeSubmitBtn').addEventListener('click', submitWelcome);
+  document.getElementById('welcomeAge').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitWelcome();
+  });
+  document.getElementById('welcomeLastName').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitWelcome();
+  });
+
   // Nav clicks
   document.querySelectorAll('.nav-tab').forEach(btn => {
     btn.addEventListener('click', () => showSection(btn.dataset.section));

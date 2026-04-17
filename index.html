@@ -9,6 +9,25 @@
 </head>
 <body>
 
+<!-- WELCOME MODAL -->
+<div id="welcomeModal" class="welcome-overlay">
+  <div class="welcome-box">
+    <div class="welcome-icon">🌿</div>
+    <h2>Welcome to HealthNote</h2>
+    <p>Please enter your details to get started.</p>
+    <div class="form-group">
+      <label for="welcomeLastName">Last Name</label>
+      <input type="text" id="welcomeLastName" placeholder="Enter your last name" />
+    </div>
+    <div class="form-group">
+      <label for="welcomeAge">Age</label>
+      <input type="number" id="welcomeAge" placeholder="Enter your age" min="1" max="120" />
+    </div>
+    <div id="welcomeError" class="welcome-error"></div>
+    <button class="btn btn-primary" id="welcomeSubmitBtn" style="width:100%;">Get Started</button>
+  </div>
+</div>
+
 <!-- NAVBAR -->
 <nav>
   <div class="nav-brand">🌿 <span>Health</span>Note</div>
