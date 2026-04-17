@@ -97,6 +97,28 @@ const FOOD_DB = [
   ["Kheer", 192, 5, 30, 6, "1 cup", 200],
   ["Ice Cream (vanilla)", 207, 3.5, 24, 11, "1 scoop", 100],
   ["Dark Chocolate", 546, 5, 60, 31, "1 square", 30],
+
+  // Indian Breads & Dishes
+  ["Puri", 340, 7, 46, 15, "2 pieces", 60],
+  ["Naan", 310, 9, 51, 8, "1 piece", 90],
+  ["Bhatura", 370, 8, 48, 17, "1 piece", 100],
+  ["Palak Paneer", 185, 9, 8, 13, "1 cup", 240],
+  ["Butter Chicken", 175, 16, 7, 9, "1 cup", 240],
+  ["Aloo Gobi", 120, 3.5, 18, 4.5, "1 cup", 200],
+  ["Pav Bhaji", 220, 6, 32, 8, "1 serving", 200],
+
+  // Legumes & Pulses
+  ["Moong Dal (cooked)", 105, 7.4, 19, 0.4, "1 cup", 202],
+  ["Masoor Dal (cooked)", 116, 9, 20, 0.4, "1 cup", 198],
+  ["Black Chana (cooked)", 164, 8.9, 27.4, 2.6, "1 cup", 240],
+  ["Soya Chunks (cooked)", 153, 17, 11, 5, "1 cup", 100],
+
+  // Healthy & International
+  ["Quinoa (cooked)", 120, 4.4, 21.3, 1.9, "1 cup", 185],
+  ["Greek Yogurt", 59, 10, 3.6, 0.4, "1 cup", 245],
+  ["Avocado", 160, 2, 9, 15, "1/2 medium", 100],
+  ["Peanut Butter", 588, 25, 20, 50, "2 tbsp", 32],
+  ["Tofu (firm)", 76, 8, 1.9, 4.8, "100g", 100],
 ];
 
 function searchFoods(query) {
