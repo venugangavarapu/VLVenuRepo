@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthNote — Personal Health Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-brand">🌿 <span>Health</span>Note</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-section="dashboard">
+      🏠 <span class="tab-label">Dashboard</span>
+    </button>
+    <button class="nav-tab" data-section="profile">
+      👤 <span class="tab-label">Profile</span>
+    </button>
+    <button class="nav-tab" data-section="food-log">
+      🍽️ <span class="tab-label">Food Log</span>
+    </button>
+    <button class="nav-tab" data-section="report">
+      📋 <span class="tab-label">Report</span>
+    </button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ── DASHBOARD ── -->
+  <section id="section-dashboard" class="section active">
+    <div class="section-header">
+      <h2>Dashboard</h2>
+      <button class="btn btn-outline btn-sm" onclick="renderDashboard()">🔄 Refresh</button>
+    </div>
+    <div id="dashContent">
+      <div class="empty-state">
+        <div class="empty-icon">🌿</div>
+        <h3>Loading your dashboard...</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROFILE ── -->
+  <section id="section-profile" class="section">
+    <div class="section-header">
+      <h2>My Profile</h2>
+    </div>
+
+    <div class="grid-2">
+      <!-- Profile Form -->
+      <div class="card">
+        <div class="card-title"><span class="icon">✏️</span>Personal Details</div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="profileName" placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label>Age (years)</label>
+            <input type="number" id="profileAge" placeholder="e.g. 28" min="5" max="120" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Gender</label>
+          <select id="profileGender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Height (cm)</label>
+            <input type="number" id="profileHeight" placeholder="e.g. 170" min="100" max="250" />
+          </div>
+          <div class="form-group">
+            <label>Weight (kg)</label>
+            <input type="number" id="profileWeight" placeholder="e.g. 65" min="20" max="300" step="0.1" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Activity Level</label>
+          <select id="profileActivity">
+            <option value="sedentary">Sedentary (desk job, no exercise)</option>
+            <option value="light">Lightly Active (1–3 days/week)</option>
+            <option value="moderate" selected>Moderately Active (3–5 days/week)</option>
+            <option value="active">Very Active (6–7 days/week)</option>
+            <option value="very_active">Extremely Active (physical job + training)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Goal</label>
+          <select id="profileGoal">
+            <option value="lose">Lose Weight</option>
+            <option value="maintain" selected>Maintain Weight</option>
+            <option value="gain">Gain Weight / Muscle</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" onclick="saveProfile()" style="width:100%;">
+          💾 Save Profile
+        </button>
+      </div>
+
+      <!-- Profile Stats -->
+      <div>
+        <div id="profileStats">
+          <div class="card">
+            <div class="empty-state">
+              <div class="empty-icon">📊</div>
+              <h3>Fill in your details</h3>
+              <p>Your health stats will appear here after saving your profile.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weight Log -->
+        <div class="card" style="margin-top:0;">
+          <div class="card-title"><span class="icon">⚖️</span>Log Today's Weight</div>
+          <div style="display:flex;gap:10px;">
+            <input type="number" id="newWeight" placeholder="e.g. 65.5 kg" min="20" max="300" step="0.1" style="flex:1;" />
+            <button class="btn btn-secondary" onclick="logWeight()">+ Log</button>
+          </div>
+          <div style="margin-top:1rem;" id="weightLogList"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOD LOG ── -->
+  <section id="section-food-log" class="section">
+    <div class="section-header">
+      <h2>Food Log</h2>
+    </div>
+
+    <!-- Date Navigation -->
+    <div class="date-nav">
+      <button onclick="changeLogDate(-1)">‹ Prev</button>
+      <span class="current-date" id="logDateDisplay">Today</span>
+      <button onclick="changeLogDate(1)">Next ›</button>
+      <button onclick="goToToday()" class="btn btn-outline btn-sm">Today</button>
+    </div>
+
+    <!-- Day Summary -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span>Today's Summary</div>
+      <div id="dayCalSummary">
+        <div class="empty-state" style="padding:1rem;"><p>No data yet for this day.</p></div>
+      </div>
+    </div>
+
+    <!-- Add Food -->
+    <div class="card">
+      <div class="card-title"><span class="icon">➕</span>Add Food Entry</div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Meal Type</label>
+          <select id="foodMeal">
+            <option value="breakfast">🌅 Breakfast</option>
+            <option value="lunch">☀️ Lunch</option>
+            <option value="dinner">🌙 Dinner</option>
+            <option value="snack">🍎 Snack</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quantity (grams)</label>
+          <input type="number" id="foodQuantity" placeholder="e.g. 150" min="1" max="2000" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Search Food</label>
+        <div class="food-search-wrap">
+          <input type="text" id="foodSearch" placeholder="Type food name (e.g. rice, chicken, banana)..." autocomplete="off" />
+          <div class="food-suggestions" id="foodSuggestions"></div>
+        </div>
+      </div>
+
+      <div id="foodPreview"></div>
+
+      <button class="btn btn-primary" onclick="addFood()" style="width:100%;margin-top:0.5rem;">
+        ➕ Add to Log
+      </button>
+    </div>
+
+    <!-- Food Log Table -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🗒️</span>Meals Logged</div>
+      <div id="foodLogTable">
+        <div class="empty-state"><div class="empty-icon">🍽️</div><p>No food logged yet for this day.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REPORT ── -->
+  <section id="section-report" class="section">
+    <div class="section-header">
+      <h2>Health Report</h2>
+      <button class="btn btn-outline btn-sm" onclick="renderReport()">🔄 Refresh Report</button>
+    </div>
+    <div id="reportContent">
+      <div class="empty-state"><div class="empty-icon">📋</div><p>Loading report...</p></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="foods.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
