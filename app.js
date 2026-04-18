@@ -1,5 +1,6 @@
 function helloWorld() {
   console.log('Hello, World!');
+  console.log('welcome to claude training');
 }
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
